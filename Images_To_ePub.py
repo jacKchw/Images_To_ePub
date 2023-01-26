@@ -20,46 +20,91 @@ from pathlib import Path
 
 from _ePubMaker import EPubMaker, CmdProgress
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = OptionParser(
-        usage='usage: %prog [--cmd] [--progress] --dir DIRECTORY --file FILE --name NAME\n'
-              '   or: %prog [--progress] DIRECTORY DIRECTORY ... (batchmode, implies -c)'
+        usage="usage: %prog [--cmd] [--progress] --dir DIRECTORY --file FILE --name NAME\n"
+        "   or: %prog [--progress] DIRECTORY DIRECTORY ... (batchmode, implies -c)"
     )
     parser.add_option(
-        '-c', '--cmd', action='store_true', dest='cmd', default=False, help='Start without gui'
+        "-c",
+        "--cmd",
+        action="store_true",
+        dest="cmd",
+        default=False,
+        help="Start without gui",
     )
     parser.add_option(
-        '-p', '--progress', action='store_true', dest='progress', default=False,
-        help='Show a nice progressbar (cmd only)'
+        "-p",
+        "--progress",
+        action="store_true",
+        dest="progress",
+        default=False,
+        help="Show a nice progressbar (cmd only)",
     )
     parser.add_option(
-        '-d', '--dir', dest='input_dir', metavar='DIRECTORY', help='DIRECTORY with the images'
+        "-d",
+        "--dir",
+        dest="input_dir",
+        metavar="DIRECTORY",
+        help="DIRECTORY with the images",
     )
     parser.add_option(
-        '-f', '--file', dest='file', metavar='FILE', help='FILE where the ePub is stored'
+        "-f",
+        "--file",
+        dest="file",
+        metavar="FILE",
+        help="FILE where the ePub is stored",
     )
     parser.add_option(
-        '-n', '--name', dest='name', default='', metavar='NAME', help='NAME of the book'
+        "-n", "--name", dest="name", default="", metavar="NAME", help="NAME of the book"
     )
     parser.add_option(
-        '-g', '--grayscale', dest='grayscale', default=False, action='store_true',
+        "-g",
+        "--grayscale",
+        dest="grayscale",
+        default=False,
+        action="store_true",
         help="Convert all images to black and white before adding them to the ePub.",
     )
     parser.add_option(
-        '-W', '--max-width', dest='max_width', default=None, type="int",
-        help="Resize all images to have the given maximum width in pixels."
+        "-W",
+        "--max-width",
+        dest="max_width",
+        default=None,
+        type="int",
+        help="Resize all images to have the given maximum width in pixels.",
     )
     parser.add_option(
-        '-H', '--max-height', dest='max_height', default=None, type="int",
-        help="Resize all images to have the given maximum height in pixels."
+        "-H",
+        "--max-height",
+        dest="max_height",
+        default=None,
+        type="int",
+        help="Resize all images to have the given maximum height in pixels.",
     )
     parser.add_option(
-        '--wrap-pages', dest='wrap_pages', action='store_true',
-        help="Wrap the pages in a separate file. Results will vary for each reader. (Default)"
+        "--wrap-pages",
+        dest="wrap_pages",
+        action="store_true",
+        help="Wrap the pages in a separate file. Results will vary for each reader. (Default)",
     )
     parser.add_option(
-        '--no-wrap-pages', dest='no_wrap_pages', action='store_true',
-        help="Do not wrap the pages in a separate file. Results will vary for each reader."
+        "--no-wrap-pages",
+        dest="no_wrap_pages",
+        action="store_true",
+        help="Do not wrap the pages in a separate file. Results will vary for each reader.",
+    )
+    parser.add_option(
+        "--creator",
+        dest="creator",
+        default="Epub Creator",
+        help="Creator of the content",
+    )
+    parser.add_option(
+        "--publisher",
+        dest="publisher",
+        default="Epub Publisher",
+        help="Publisher of the content",
     )
     (options, args) = parser.parse_args()
 
@@ -81,26 +126,49 @@ if __name__ == '__main__':
 
         for path in directories:
             EPubMaker(
-                master=None, input_dir=path, file=path.parent.joinpath(path.name + '.epub'), name=path.name or "Output",
-                grayscale=options.grayscale, max_width=options.max_width, max_height=options.max_height,
-                progress=CmdProgress(options.progress), wrap_pages=not options.no_wrap_pages
+                master=None,
+                input_dir=path,
+                file=path.parent.joinpath(path.name + ".epub"),
+                name=path.name or "Output",
+                grayscale=options.grayscale,
+                max_width=options.max_width,
+                max_height=options.max_height,
+                creator=options.creator,
+                publisher=options.publisher,
+                progress=CmdProgress(options.progress),
+                wrap_pages=not options.no_wrap_pages,
             ).run()
     elif options.input_dir and options.file and options.name:
         if options.cmd:
             if args or not options.input_dir or not options.file or not options.name:
-                parser.error("The '--dir', '--file', and '--name' arguments are required.")
+                parser.error(
+                    "The '--dir', '--file', and '--name' arguments are required."
+                )
 
             EPubMaker(
-                master=None, input_dir=options.input_dir, file=options.file, name=options.name,
-                grayscale=options.grayscale, max_width=options.max_width,
-                max_height=options.max_height, progress=CmdProgress(options.progress),
-                wrap_pages=not options.no_wrap_pages
+                master=None,
+                input_dir=options.input_dir,
+                file=options.file,
+                name=options.name,
+                grayscale=options.grayscale,
+                max_width=options.max_width,
+                max_height=options.max_height,
+                creator=options.creator,
+                publisher=options.publisher,
+                progress=CmdProgress(options.progress),
+                wrap_pages=not options.no_wrap_pages,
             ).run()
         else:
             import _Gui
 
-            _Gui.start_gui(input_dir=options.input_dir, file=options.file, name=options.name,
-                           grayscale=options.grayscale, max_width=options.max_width, max_height=options.max_height,
-                           wrap_pages=not options.no_wrap_pages)
+            _Gui.start_gui(
+                input_dir=options.input_dir,
+                file=options.file,
+                name=options.name,
+                grayscale=options.grayscale,
+                max_width=options.max_width,
+                max_height=options.max_height,
+                wrap_pages=not options.no_wrap_pages,
+            )
     else:
         parser.print_help()
