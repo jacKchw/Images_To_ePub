@@ -26,7 +26,7 @@
         <item id="toc" properties="nav" href="toc.xhtml" media-type="application/xhtml+xml"/>
         <item id="ncxtoc" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
     </manifest>
-    <spine toc="ncxtoc">
+    <spine toc="ncxtoc" page-progression-direction="rtl">
         {%- for image in images %}
         <itemref idref="{{- image.id -}} {%- if wrap_pages -%} _wrapper {%- endif -%}" />
         {%- endfor %}
