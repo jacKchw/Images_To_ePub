@@ -20,7 +20,7 @@
         {%- for image in images %}
         <item id="{{ image.id }}" {% if image.is_cover %}properties="cover-image" {% endif %}href="images/{{ image.filename }}" media-type="{{ image.type }}"/>
         {%- if wrap_pages %}
-        <item id="{{ image.id }}_wrapper" href="pages/{{ image.id }}.xhtml" media-type="application/xhtml+xml"/>
+        <item id="{{ image.id }}_wrapper" href="pages/{{ image.id }}.xhtml" media-type="application/xhtml+xml" properties="svg"/>
         {% endif %}
         {%- endfor %}
         <item id="toc" properties="nav" href="toc.xhtml" media-type="application/xhtml+xml"/>
